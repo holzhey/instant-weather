@@ -10,15 +10,33 @@ struct Current {
 }
 
 #[derive(Serialize, Deserialize, Debug)]
+struct Units {
+    time: String,
+    #[serde(rename = "temperature_2m")]
+    temperature: String,
+}
+
+#[derive(Serialize, Deserialize, Debug)]
 struct Conditions {
     latitude: f32,
     longitude: f32,
+    current_units: Units,
     current: Current,
+}
+
+#[derive(Debug)]
+struct CurrentConditions {
+    time: String,
+    temperature: String,
 }
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let resp = reqwest::get(URL).await?.json::<Conditions>().await?;
-    println!("{resp:#?}");
+    let cc = CurrentConditions {
+        time: resp.current.time.to_string(),
+        temperature: resp.current.temperature.to_string(),
+    };
+    println!("Time: {:?}, Temperature: {:?}", cc.time, cc.temperature);
     Ok(())
 }
