@@ -45,16 +45,14 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 fn render_url(base_url: &str, latitude: f32, longitude: f32) -> String {
     let mut url: String = base_url.to_string() + "?";
     url.push_str(&render("latitude", latitude));
-    url.push('&');
-    url.push_str(&render("longitude", longitude));
+    url.push_str(&render("&longitude", longitude));
     url.push_str("&current=");
     for parameter in PARAMETERS {
         url.push_str(parameter);
         url.push(',');
     }
     url.pop();
-    url.push('&');
-    url.push_str(&render("models", MODEL));
+    url.push_str(&render("&models", MODEL));
     url
 }
 
