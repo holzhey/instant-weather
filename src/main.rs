@@ -2,7 +2,12 @@ const URL: &str = "https://api.open-meteo.com/v1/forecast?latitude=46.2022&longi
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
-    let resp = reqwest::get(URL).await?.json::<serde_json::Value>().await?;
+    let resp = reqwest::get(URL)
+        .await
+        .expect("API requeste failed")
+        .json::<serde_json::Value>()
+        .await
+        .expect("Response parsing failed");
     if let (Some(values), Some(units)) = (
         resp.get("current").unwrap().as_object(),
         resp.get("current_units").unwrap().as_object(),
